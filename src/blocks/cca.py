@@ -13,9 +13,9 @@ class CrissCrossAttention(nn.Module):
         self.gamma = nn.Parameter(torch.zeros(1))
 
     def forward(self, x):
-        B, C, H, W = x.size()
+        B, C, H, W = x.shape
 
-        Q = self.query(x)  
+        Q = self.query(x)
         K = self.key(x)
         V = self.value(x)
 
@@ -28,14 +28,14 @@ class CrissCrossAttention(nn.Module):
         for i in range(H):
             for j in range(W):
 
-                q = Q[:, i, j, :]  
+                q = Q[:, i, j, :] 
 
                 k_row = K[:, i, :, :]  
-                k_col = K[:, :, j, :]  
+                k_col = K[:, :, j, :]   
 
                 k = torch.cat([k_row, k_col], dim=1)  
 
-                energy = torch.bmm(k, q.unsqueeze(-1)).squeeze(-1)  
+                energy = torch.bmm(k, q.unsqueeze(-1)).squeeze(-1)
 
                 attn = F.softmax(energy, dim=1)
 
